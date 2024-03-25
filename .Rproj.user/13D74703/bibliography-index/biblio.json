@@ -1,0 +1,126 @@
+{
+    "sources": [
+        {
+            "DOI": "10.4067/S0717-554X2015000200004",
+            "ISSN": "0717-554X",
+            "accessed": {
+                "date-parts": [
+                    [
+                        2024,
+                        3,
+                        25
+                    ]
+                ]
+            },
+            "author": [
+                {
+                    "family": "Aravena",
+                    "given": "Andrea"
+                },
+                {
+                    "family": "Baeza",
+                    "given": "Manuel Antonio"
+                }
+            ],
+            "container-title": "Cinta de moebio",
+            "id": "aravenaConstruccionSocioimaginariaRelaciones2015",
+            "issue": "53",
+            "issued": {
+                "date-parts": [
+                    [
+                        2015,
+                        9
+                    ]
+                ]
+            },
+            "language": "en-US",
+            "page": "147-157",
+            "title": "Construcción socio-imaginaria de relaciones sociales: La desconfianza y el descontento en el Chile post-dictadura",
+            "title-short": "Construcción socio-imaginaria de relaciones sociales",
+            "type": "article-journal"
+        },
+        {
+            "DOI": "10.4067/S0718-090X2016000100006",
+            "ISSN": "0718-090X",
+            "accessed": {
+                "date-parts": [
+                    [
+                        2024,
+                        3,
+                        25
+                    ]
+                ]
+            },
+            "author": [
+                {
+                    "family": "Gamboa",
+                    "given": "Ricardo"
+                },
+                {
+                    "family": "Segovia",
+                    "given": "Carolina"
+                }
+            ],
+            "container-title": "Revista de ciencia política (Santiago)",
+            "id": "gamboaChile2015Falla2016",
+            "issue": "1",
+            "issued": {
+                "date-parts": [
+                    [
+                        2016,
+                        4
+                    ]
+                ]
+            },
+            "language": "en-US",
+            "page": "123-144",
+            "title": "Chile 2015: Falla política, desconfianza y reforma",
+            "title-short": "Chile 2015",
+            "type": "article-journal",
+            "volume": "36"
+        },
+        {
+            "author": [
+                {
+                    "family": "Izquierdo",
+                    "given": "Sebastian"
+                }
+            ],
+            "container-title": "Centro de estudios publicos",
+            "id": "izquierdoAlarmanteFaltaConfianza2023",
+            "issued": {
+                "date-parts": []
+            },
+            "title": "La alarmante falta de confianza en la politica",
+            "type": "article-journal"
+        },
+        {
+            "ISSN": "0717-3202",
+            "author": [
+                {
+                    "family": "AyalaP.",
+                    "given": "Teresa"
+                }
+            ],
+            "container-title": "Revista Austral de Ciencias Sociales",
+            "id": "teresaayalap.RedesSocialesPoder2014",
+            "issued": {
+                "date-parts": [
+                    [
+                        2014
+                    ]
+                ]
+            },
+            "page": "23-48",
+            "title": "Redes sociales, poder y participación ciudadana",
+            "type": "article-journal",
+            "volume": "26"
+        },
+        {
+            "id": "ayalap.2014",
+            "title": "Ayala p., teresa redes sociales, poder y participación ciudadana",
+            "type": "article-journal"
+        }
+    ],
+    "project_biblios": []
+}

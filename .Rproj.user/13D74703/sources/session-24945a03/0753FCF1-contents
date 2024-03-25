@@ -1,0 +1,245 @@
+
+## GUIA NUMERO 2 ESTADISTICA IV
+## CAMILO AGURTO Y TOMAS MARILEO
+
+## OBJETIVO GENERAL: 
+
+# 1. PREPARACIÓN DE LOS DATOS ---------------------------------------------
+#Ajustes iniciales
+options(scipen=999) # Desactiva la notación científica
+rm(list=(ls())) # Limpiar la memoria de trabajo
+
+#Directorio de trabajo
+setwd("C:/Users/Camilo Agurto/OneDrive/Desktop/SOCIOLOGIA/quinto año/Segundo semestre/Estadistica 4/Practico 2")
+
+#Paquetes (tienen que estar instalados previamente)
+install.packages("tidyverse")
+install.packages("psych")
+install.packages("sjPlot")
+install.packages("GPArotation")
+install.packages("mvnormtest")
+install.packages("haven")
+
+
+library(tidyverse) #manipular datos, gráficos, funciones, entre otros
+library(psych) #alpha, PCA, EFA
+library(sjPlot) #tablas
+library(GPArotation) #otras rotaciones
+library(mvnormtest) #SW multivariado
+library(haven)
+
+#Datos
+CEP <- read_dta("base.dta")
+dim(CEP) #1467
+
+#Seleccionamos las variables a analizar
+CEP <- CEP %>%
+  select(democracia_35_a:democracia_35_k, region, edad) %>%  # Selecciona las columnas de interés
+  filter(region == 9, edad >= 18 & edad <= 35)  # Aplica los filtros de región y rango de edad
+CEP <- CEP %>%
+  select(-edad, -region)
+names(CEP)
+##############################################
+
+
+# 2. TRANSFORMACIÓN DE VARIABLES ------------------------------------------
+
+#¿qué tan esencial cree que es cada una de las siguientes
+#características para la democracia? 0 - 10
+
+#0 No es una caracteristica esencial
+#10 definitivamente si es una caracteristica esencial
+
+#democracia_35_a El congreso equilibra el poder del gobierno
+#democracia_35_b El gobierno garantiza la seguridad y el orden publico
+#democracia_35_c Las personas eligen a las autoridades en libre elecciones
+#democracia_35_d Las personas deciden a través de consultas locales los asuntos más importantes de su comuna
+#democracia_35_e Los tribunales de justicia son independientes del gobierno
+#democracia_35_f Los derechos de las minorías están protegidos
+#democracia_35_g Las personas tienen libertad para criticar al gobierno
+#democracia_35_h Hay oportunidades de empleo para todas las personas
+#democracia_35_i Hay al menos dos partidos políticos
+#democracia_35_j No hay grandes diferencias de ingresos entre ricos y pobres
+#democracia_35_k Las personas deciden a través de plebiscitos los asuntos más importantes del país
+
+
+view_df(CEP)
+
+#dejamos los perdidos como NA
+CEP <- CEP %>%
+  mutate_at(vars(starts_with("democracia")), 
+            ~case_when(.< 1 ~NA_real_,
+                       TRUE ~.))
+#borramos NA
+CEP <- CEP %>% 
+  drop_na()
+dim(CEP) 
+
+#descriptivos (con paquete psych)
+describe(CEP)
+
+#Confiabilidad del contructo latente
+alpha(CEP)
+#De acuerdo al estadistico Alfa de Cronbach, y tomando en cuenta tanto alfa 
+#no estandarizado como tambien el estandarizado, se puede señalar  
+# que hay una consistencia en todas las variables ya que presentan un alfa
+# mayor a 0,7, esto significa que todas contribuyen de manera coherente al constructo
+# y que no se justifica la eliminación de alguna en particular.
+# no estandarizado: 0.71 y estandarizado: 0.77
+
+##############################################
+
+
+# 3. DESCRIPTIVOS ---------------------------------------------------------
+
+describe(CEP)
+##############################################
+
+# 4. EVALUACIÓN DE SUPUESTOS ----------------------------------------------------
+
+# 4.1. Nivel de medición de las variables ----------------------------------------
+
+#Asimetría y curtosis
+describe(CEP) #Curtosis y asimetria deben ir de -2 a 2
+
+# Los datos nos señalan que practicamente todas las variables presentan una distribucion
+# simetrica salvo las variables "democracia_35_e", "democracia_35_i" y "democracia_35_j"
+# las cuales presentan una distribución asimetrica cargada hacía el lado derecha de la curva
+
+# Los datos sobre la curtosis nos señala que casi todas las variables presentan una 
+#distribución normal salvo las variable "democracia_35_e", "democracia_35_i" y "democracia_35_j"
+# lo que significa que estas variables poseen una concentracion de datos en torno a la media,
+# lo que indica que su distribución no es normal
+
+
+#Se establece un test de hipotesis donde H0 es que las variables poseen una distribución normal
+#y h1 es que las variables no poseen una distribucion normal 
+
+#H0 : La variable tiene una distribución normal.
+#Es quedarnos con H0 para cumplir este supuesto, buscamos valores-p >0,05
+#Kolmogorov-Smirnov
+
+ks.test(CEP$democracia_35_a, "pnorm") 
+ks.test(CEP$democracia_35_b, "pnorm") 
+ks.test(CEP$democracia_35_c, "pnorm") 
+ks.test(CEP$democracia_35_d, "pnorm") 
+ks.test(CEP$democracia_35_e, "pnorm") 
+ks.test(CEP$democracia_35_f, "pnorm") 
+ks.test(CEP$democracia_35_g, "pnorm")
+ks.test(CEP$democracia_35_h, "pnorm")
+ks.test(CEP$democracia_35_i, "pnorm")
+ks.test(CEP$democracia_35_j, "pnorm")
+ks.test(CEP$democracia_35_k, "pnorm")
+
+
+#Debido a que todos los datos que arroja el test Kolmogorov-Smirnov
+# son menores a 0.05, se rechaza hipotesis nula, 
+# lo que significa que las variables no poseen una distribución normal
+#En conclusión, se acumula la evidencia que indica que es preferible usar
+# la tecnica de analisis de factores principales por sobre la estimacion de verosimilitud
+
+
+#vamos a asumir el supuesto aunque el test de hipotesis señala que no se cumple
+
+# 4.2. Normalidad multivariada --------------------------------------------
+
+#Shapiro Wilk multivariado: H0 : la distribución de los datos es normal multivariada.
+mshapiro.test(t(CEP)) # se rechaza h0 no se cumple el supuesto de distribucion normal multivariada
+#ya que el valor-p es menor al nivel de significancia 0,5 (0.00000000000000022)
+#es decir no podemos asegurar que los datos tienen una distribucion normal
+#por lo que no podemos ocupar la estimación de maxima verosimilitud  y
+#se debe ocupar factores principales 
+
+# 4.3. Correlación lineal entre variables ----------------------------------------
+
+#Matriz de correlación de Pearson
+##>= 0, 3
+cor(CEP)
+tab_corr(CEP,
+         corr.method =  "pearson")
+#Si hay una variable que tiene una correlacion menor a 0.3 con todas las otras variables
+#Ninguna de las variables presenta una correlación menor a 0.3 con todas las otras variables
+#sin embargo se puede indicar que al menos 4 variables presentan una correlación significativa
+# con solo dos variables. La que menos correlación presenta con las demas es 
+#"democracia_35_g. Las personas tienen libertad para criticar al gobierno#, no obstante
+
+#Por otra parte, se presentan variables con correlaciones cercana a 1, lo que dificultaría
+#la interpretación adecuada del AFE por su alta colinealidad. 
+
+#Determinante de la matriz de correlaciones
+##cercano a 0
+det(cor(CEP)) 
+
+#### El determinante de la matriz de correlaciones que arrojo 0.00000109575, indica que
+# es un determinante extremadamente pequeño con un valor cercano a 0, esto significa
+# que las variables presentan un alto nivel de colinealidad.
+
+#para solucionar este problema se ha optado por eliminar las variables "democracia_35_e Los tribunales de justicia son independientes del gobierno"
+# la variable "democracia_35_j No hay grandes diferencias de ingresos entre ricos y pobres" 
+# y la variable "democracia_35_i Hay al menos dos partidos políticos"
+#Estas tres variables solo presentan una correlacion sobre 0.3 con otras dos variables, y ademas
+# estas dos correlaciones son con valores muy cercanas a 1 (0.9), 
+# lo que indica unas correlaciones demasiado altas que pueden perjudicar el analisis
+
+### Se eliminan las variables indicadas
+
+CEP <- CEP %>% 
+  select(-democracia_35_e, -democracia_35_i, -democracia_35_j)
+
+#Aplicacion nuevamente del determinante de correlacion
+# siendo el determinante 0.02128438, sugiere una mejore en relación a la 
+#colinealidad entre las variables con un numero no tan cercano a 0.
+#Sin embargo, sigue siendo un numero pequeño, lo que indica que aun hay una alta
+#correlacion entre las variables. Esto significa que se debe generar un analisis 
+#precavido del AFE.
+
+#Prueba Esfericidad Bartlett
+##H0: la matriz de correlaciones es un matriz de identidad
+##en otras palabras, es que no hay correlacion entre variables
+cortest.bartlett(CEP) #Se lee el valor-p, si es 0 se rechaza hipotesis nula por lo que hay 
+#correlación entre las variables, buscamos que se rechace h0
+
+
+#¿Conclusión?
+
+#Se rechaza h0 debido a que valor - p 0.001352234 es un valor cercano a 0, lo que indica que 
+# hay correlacion entre las variables, es decir que la matriz de correlacion
+#no es una matriz de identidad. Los datos son adecuados para realizar el AFE
+
+#Prueba KMO
+##valores sobre 0,7
+KMO(CEP) #se lee overall MSA, debe ser mayor a 0.7
+#¿Conclusión?
+#siendo MSA de 0.7, se puede señalar que la estructura de correlacion es adecuada
+#para realizar el AFE.
+
+
+##############################################
+
+# 5. ANÁLISIS FACTORIAL EXPLORATORIO ----------------------------------------------------
+
+#paquete psych
+EFA <- fa(CEP, #la CEP
+          nfactors = 3, #n factores (acá exploramos el número de factores con cuales quedarnos)
+          fm="pa", #método de extracción: factores principales (principal axis)
+          rotate = "none") #sin rotación
+EFA
+print.psych(EFA, cut = 0.3, sort = TRUE)
+psych::scree(CEP)
+
+#Ejemplo Varimax
+EFA_varimax <- fa(CEP, #la CEP
+          nfactors = 3, #n factores (acá exploramos el número de factores con cuales quedarnos)
+          fm="pa", #método de extracción: factores principales (principal axis)
+          rotate = "varimax") #varimax
+EFA_varimax
+
+#Ejemplo Oblimin
+EFA_oblimin <- fa(CEP, #la CEP
+                  nfactors = 3, #n factores (acá exploramos el número de factores con cuales quedarnos)
+                  fm="pa", #método de extracción: factores principales (principal axis)
+                  rotate = "oblimin") #oblimin
+EFA_oblimin
+
+
+
