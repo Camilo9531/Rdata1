@@ -1,8 +1,0 @@
-#COES 2021
-
-#Desactivar notacion cientifica
-options(scipen=999)
-#Limpiar memoria de trabajo
-rm(list=(ls()))
-#directorio de trabajo
-setwd("C:/Users/Camilo Agurto/OneDrive/Desktop/SOCIOLOGIA/ultimo semestre/R para estadistica")

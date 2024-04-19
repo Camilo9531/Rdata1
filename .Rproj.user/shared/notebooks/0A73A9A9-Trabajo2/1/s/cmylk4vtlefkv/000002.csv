@@ -1,0 +1,7 @@
+"0","  geom_bar(fill = ""black"")+
+  labs(title = ""Desconfianza en instituciones"",
+       x = ""Desconfianza en instituciones"",
+       y = ""Frecuencia"")"
+"2","""investigacion"" no se reconoce como un comando interno o externo,
+programa o archivo por lotes ejecutable.
+"

@@ -1,0 +1,81 @@
+---
+title: "Trabajo 2"
+author: "Camilo"
+format: html
+editor: visual
+bibliography: Rstudio.bib
+link-citations: true 
+---
+
+## La perdida de la satisfacción por la democracia en Chile y su relación con la desconfianza a las instituciones politicas.
+
+Camilo Agurto
+
+## Introduccion
+
+Desde las distintas manifestaciones ocurridas en el país en los últimos años, así como también se ha expresado diversas encuestas, medios de comunicación, en la convivencia cotidiana entre las personas, etc, un elemento que permanece y crece es el descontento con la clase política nacional. Diversas son las razones que han contribuido a este malestar entre las que se puede destacar principalmente los distintos casos de corrupción, Gamboa, R [@gamboaChile2015Falla2016] señala, por ejemplo, como el caso Caval en el segundo gobierno de Michelle Bachelet provocó que muchas de sus reformas, inclusos aquellas que en perspectiva se esperaba fueran populares, no contarán con la aprobación ni con el entusiasmo popular. Por otro lado, desde una perspectiva sistémica Aravena, A [@aravenaConstruccionSocioimaginariaRelaciones2015] nos señala que el malestar con la clase política reside en una crisis de las democracias que no logran generar certezas ante una serie de incertidumbres que van experimentando las sociedades. Sobre esto último es importante destacar una serie de transformaciones profundas en la experiencia tanto objetiva como subjetiva de la realidad social que ha sido provocada por la integración de nuevas tecnologías y las redes sociales que ha generado una cibercultura que redefine los términos de la participación política de parte de la ciudadanía, y que entre sus consecuencias negativas se puede considerar la baja tolerancia a la divergencia, lo que se puede traducir en malestar político [@ayalap.2014]
+
+La crisis que experimenta actualmente el sistema político generalmente es tratada en los medios de comunicación como una crisis de la representatividad de los partidos políticos, enfocando el problema derechamente en el sistema de partidos y no en la totalidad del sistema político institucional. No obstante, la devaluación de la institucionalidad política pareciera ser un fenómeno relativamente transversal, desde los gobiernos, hasta el congreso e incluso el sistema de justicia, cuentan con altos niveles de desaprobación y desafección. Esto plantea un problema mucho más complejo en el horizonte de la estabilidad política futura del país - y  los países occidentales ya que se trata de un problema de alcance global - que es el peligro que experimentan los sistemas democráticos al posible advenimiento de regímenes autoritarios. Dentro de la discusión no son pocos los intelectuales y expertos que asumen de forma a priori que la crisis del sistema político, en particular la crisis de representatividad, genera una pérdida progresiva de los valores democráticos, por ejemplo izquierdo, S [@izquierdoAlarmanteFaltaConfianza2023] asume una relación lineal de la crisis de representatividad con una una pérdida del valor hacía el sistema democratico país. Sin embargo, ante la evidente naturalización de la relación entre estos fenómenos, es importante plantear una irrupción crítica que permita por medio de una investigación dar cuenta si es posible establecer a ciencia cierta una relación a priori entre estos fenómenos, o si por el contrario se hace conveniente matizar o resguardar conclusiones que se podrían estar utilizando de forma apresurada. 
+
+La investigación que se llevará a cabo buscará dar cuenta, tanto por medio de los datos empíricos como por medio de una revisión de la literatura, como la valoración social hacía la democracia se ve afectada por la desconfianza hacía las instituciones politicas. El objetivo de este estudio es observar si es posible establecer una correlación entre ambos fenómenos que sea significativa, además de indagar de manera más bien específica que valores democráticos son los que se ven más o menos afectados en relación al descontento político. El interés de indagar esta problemática se encuentra en la posibilidad de aportar conocimiento que pueda dar luces más claras sobre la situación política contingente y los riesgos que pudieran haber sobre las condiciones sociales que dieran posibilidad a regresiones autoritarias futuras en el país.
+
+**Pregunta de investigacion**
+
+¿De que manera la satisfacción por la democracia en Chile se ve afectada por por el nivel de desconfianza hacía las instituciones politicas?
+
+**METODOLOGÍA Y OPERACIONALIZACION DE VARIABLES**
+
+Para este estudio se utilizara la base de datos de la encuesta ELSOC 2016 -2022, el cual consiste en un estudio longitudinal que analiza los cambios en el electorado chileno entre los años señalados. Para proposito de nuestra investigación, usaremos aquellas variables que refieran en primer lugar a satisfaccion con el regimen democratico, y en segundo lugar aquellas que refieran a la desconfianza con la institucionalidad politica del país.
+
+Usaremos como variable dependiente la variable C01 que responde a la satisfaccion con la democracia en Chile. Esta variable plantea la pregunta ¿Cúan satisfecho o insatisfecho esta usted con el funcionamiento de la democracia en Chile? y sus alternativas de respuesta son 1. Nada satisfecho, 2. Poco satisfecho, 3. Algo satisfecho, 4. Bastante satisfecho, 5. Muy satisfecho.
+
+Las variables independientes que ocuparemos responden a la pregunta ¿Podría decirme cuanto confia usted en cada una de las siguientes instituciones? -\> gobierno (c05_01), partidos politicos (c05_02), poder judicial (c05_05) y congreso (c05_07). Estas cuatro variables comparten originalmente un orden de respuesta en donde 1 es nada de confianza y 5 mucha confianza.
+
+Debido a que buscamos utilizar el nivel de desconfianza que tienen los chilenos en las instituciones, se opto por revertir el valor de las variables independientes quedando como 0 nada de desconfianza y 4 mucha desconfianza.
+
+Los valores asociados a las alternativas de respuesta -999 no responde, -888 no sabe, -777 valor perdido por error tecnico y -666 valor perdido por encuesta incompleta, fueron dejados como valores nulos. Consiguientemente se procede a borrar los valores nulos de la base de datos .
+
+Se crea una nueva variable independiente que es la suma total de las variables de desconfianza en instituciones politicas. Esta variable se llama "Desconfianza en instituciones politicas".
+
+**Descriptivos de las variables a utilizar**
+
+*Variable dependiente:*
+
+Satisfaccion con la democracia: Media: 1.09, mediana:1, sd: 0.94
+
+Los datos indican que el promedio de las respuestas por parte de los encuestados da un valor cercano a 1, si tomamos en cuenta la mediana que es 1 podemos indicar que el valor promedio de respuesta señala que la mayoría de los encuestados siente poca satisfaccion con la democracia en Chile.
+
+*Variables independientes:*
+
+Desconfianza gobierno: media: 3.07, mediana: 3, sd: 0.91
+
+Desconfianza partidos politicos: media: 3.59, mediana: 4, sd: 0.66
+
+Desconfianza poder judicial: media: 2.95, mediana: 3, sd: 0.96
+
+Desconfianza congreso: media: 3.21, mediana: 3, sd: 0.85
+
+Los datos nos indican que en casi todas las variables de desconfianza politica se presenta una media que va desde 3 a 4, salvo la variable de poder judicial que presenta 2.95. Esto nos indica que la desconfianza promedio que sienten los encuestados va desde algo de desconfianza a bastante desconfianza. Por otro lado, la variable partidos politicos es la que presenta un promedio mas alto de desconfianza respecto de las demas, y ademas es que la presenta menor dispersión en sus datos lo que nos indica que hay un sentir mas homogeneo por parte de los encuestados respecto de esta variable.
+
+Grafico Satisfaccion por la democracia.
+
+```{Satisfaccion_democracia}
+Satisfaccion democracia <- sjPlot::plot_stackfrq(dplyr::select(investigacion,satif_demo),}
+                                title = "satisfaccion con la democracia") +
+  theme(legend.position="bottom")
+Satisfaccion_democracia
+```
+
+De acuerdo a la información otorgada por el grafico, aproximadamente el 68% de los encuestados se encuentra insatisfecho con la democracia en el país. Por otra parte un 25,1% se encuentra algo satisfecho aproximadamente solo un 7% se encuentra satisfecho con la democracia
+
+```{Desconfianza en las intituciones politicas}
+grafico2 <- sjPlot::plot_stackfrq(dplyr::select(investigacion,desconf_gob,
+                                              desconf_pjudicial,
+                                              desconf_ppolit,
+                                              desconf_cong),
+                                title = "desconfianza en instituciones políticas") +
+  theme(legend.position="bottom")
+grafico2
+```
+
+De acuerdo al grafico, se puede indicar que todas las variables presentan al menos un grado de desconfianza hacía las intituciones superior al 60%. Las que mas desconfianza generan son los partidos politicos con un 92% de desconfianza y el congreso con un 79% de desconfianza aproximada. Por otra parte, solo el poder juidicial con el gobierno presentan un porcentaje de confianza sobre el 20%.
