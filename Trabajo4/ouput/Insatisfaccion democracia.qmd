@@ -1,0 +1,317 @@
+---
+title: "Trabajo4"
+author: "Camilo Agurto"
+format: html
+editor: visual
+bibliography: Rstudio.bib
+link-citations: true 
+---
+
+```{r}
+library(summarytools)
+library(sjlabelled)
+library(readr)
+library(dplyr)
+library(haven)
+library(sjPlot)
+library(sjmisc)
+library(tidyverse)
+library(ggplot2)
+library(psych)
+library(stargazer)
+library(car)
+library(psych)
+ELSOC <- read_dta("C:/Users/Camilo Agurto/OneDrive/Documentos/GitHub/Rdata1/Trabajo2/input/ELSOC_W05_v1.0_Stata13.dta")
+
+#Explorar base de datos
+names(ELSOC)
+dim(ELSOC)
+view(ELSOC)
+#Pregunta de investigacion: ¿De qué manera la desconfianza en las instituciones políticas
+# influye en la insatisfacción que sienten los chilenos con la democracia?
+
+#Variable dependiente: 
+# Satisfaccion con la democracia en chile: c01
+
+#Variables independientes:  
+#Confianza en el gobierno: c05_01, 
+#confianza en los partidos politicos: c05_02,
+#confianza en el poder judicial: c05_05
+#confianza en el congreso nacional: c05_07
+
+#Variables de control: Region.
+
+#Seleccion de variables a utilizar
+
+investigacion <- select(ELSOC,region_cod,c01,c05_01,c05_02,c05_05,c05_07)
+
+#Valores descriptivos
+
+frq(investigacion$region_cod)
+frq(investigacion$c01)
+investigacion$c01 <- recode(investigacion$c01,"c(-999,-888,-777,-666)=NA")
+frq(investigacion$c05_01)
+investigacion$c05_01 <- recode(investigacion$c05_01,"c(-999,-888,-777,-666)=NA")
+frq(investigacion$c05_02)
+investigacion$c05_02 <- recode(investigacion$c05_02,"c(-999,-888,-777,-666)=NA")
+frq(investigacion$c05_05)
+investigacion$c05_05 <- recode(investigacion$c05_05,"c(-999,-888,-777,-666)=NA")
+frq(investigacion$c05_07)
+investigacion$c05_07 <- recode(investigacion$c05_07,"c(-999,-888,-777,-666)=NA")
+
+#Borrar datos nulos
+
+investigacion <-na.omit(investigacion)
+describe(investigacion)
+#recodificacion variables: pasamos de satisfaccion a insatisfaccion, tambien de 
+# de confianza a desconfianza, para ello revertimos los valores de todas las variables
+
+investigacion$c01 <- recode(investigacion$c01, "1=4;2=3;3=2;4=1;5=0")
+investigacion$c05_01 <- recode(investigacion$c05_01,"1=4;2=3;3=2;4=1;5=0")
+investigacion$c05_02 <- recode(investigacion$c05_02,"1=4;2=3;3=2;4=1;5=0")
+investigacion$c05_05 <- recode(investigacion$c05_05,"1=4;2=3;3=2;4=1;5=0")
+investigacion$c05_07 <- recode(investigacion$c05_07,"1=4;2=3;3=2;4=1;5=0")
+
+#recodificacion a variable dummy region: region metropolitana 1, otras regiones 0 (variable metropo)
+
+investigacion <- investigacion %>%
+  mutate(metropo = case_when(
+    region_cod %in% c(13) ~ 1,
+    TRUE ~ 0
+  ))
+
+#Renombrar variables
+
+investigacion <- investigacion %>% rename("insatif_demo"=c01,
+                                          "desconf_gob"=c05_01,
+                                          "desconf_ppolit"=c05_02,
+                                          "desconf_pjudicial"=c05_05,
+                                          "desconf_cong"=c05_07,
+                                          "region"=region_cod)
+investigacion$insatif_demo <- set_label(x=investigacion$insatif_demo,label = "insatisfaccion:democracia")
+get_label(investigacion$insatif_demo)
+investigacion$desconf_gob <- set_label(x=investigacion$desconf_gob,label = "desconfianza:Gobierno")
+get_label(investigacion$desconf_gob)
+investigacion$desconf_ppolit <- set_label(x=investigacion$desconf_ppolit,label = "desconfianza:partidospoliticos")
+get_label(investigacion$desconf_ppolit)
+investigacion$desconf_pjudicial <- set_label(x=investigacion$desconf_pjudicial,label = "desconfianza:poderjudicial")
+get_label(investigacion$desconf_pjudicial)
+investigacion$desconf_cong <- set_label(x=investigacion$desconf_cong,label = "desconfianza:Congreso")
+get_label(investigacion$desconf_cong)
+
+
+#arreglo de recodificacion
+
+investigacion$insatif_demo <- set_labels(investigacion$insatif_demo,
+                                 labels=c( "nada insatisfecho"=0,
+                                           "poco insatisfecho"=1,
+                                           "algo insatisfecho"=2,
+                                           "bastante insatisfecho"=3,
+                                           "muy insatisfecho"=4))
+investigacion$desconf_gob <- set_labels(investigacion$desconf_gob,
+                                 labels=c( "nada de desconfianza"=0,
+                                           "poca desconfianza"=1,
+                                           "Algo de deconfianza"=2,
+                                           "bastante desconfianza"=3,
+                                           "mucha desconfianza"=4))
+investigacion$desconf_ppolit <- set_labels(investigacion$desconf_ppolit,
+                                     labels=c( "nada de desconfianza"=0,
+                                               "poca desconfianza"=1,
+                                               "Algo de deconfianza"=2,
+                                               "bastante desconfianza"=3,
+                                               "mucha desconfianza"=4))
+
+investigacion$desconf_pjudicial<- set_labels(investigacion$desconf_pjudicial,
+                                        labels=c( "nada de desconfianza"=0,
+                                                  "poca desconfianza"=1,
+                                                  "Algo de deconfianza"=2,
+                                                  "bastante desconfianza"=3,
+                                                  "mucha desconfianza"=4))
+
+
+investigacion$desconf_cong <- set_labels(investigacion$desconf_cong,
+                                     labels=c( "nada de desconfianza"=0,
+                                               "poca desconfianza"=1,
+                                               "Algo de deconfianza"=2,
+                                               "bastante desconfianza"=3,
+                                               "mucha desconfianza"=4))
+
+
+#Creamos variable de confianza institucional
+investigacion$desconf_inst <- (investigacion$desconf_gob+investigacion$desconf_ppolit+investigacion$desconf_pjudicial+investigacion$desconf_cong)
+summary(investigacion$desconf_inst)
+frq(investigacion$desconf_inst)
+investigacion$desconf_inst <- set_label(x=investigacion$desconf_inst,label = "desconfianza en instituciones")
+
+
+#revision
+
+frq(investigacion$insatif_demo)
+frq(investigacion$desconf_gob)
+frq(investigacion$desconf_ppolit)
+frq(investigacion$desconf_pjudicial)
+frq(investigacion$desconf_cong)
+
+#grafico desconfianza en instituciones
+
+investigacion %>% ggplot(aes(x = desconf_inst)) + 
+  geom_bar(fill = "black")+
+  labs(title = "Desconfianza en instituciones",
+       x = "Desconfianza en instituciones",
+       y = "Frecuencia")
+
+
+grafico2 <- sjPlot::plot_stackfrq(dplyr::select(investigacion,desconf_gob,
+                                              desconf_pjudicial,
+                                              desconf_ppolit,
+                                              desconf_cong),
+                                title = "desconfianza en instituciones políticas") +
+  theme(legend.position="bottom")
+grafico2
+
+#grafico satisfaccion con la democracia
+
+insatisfaccion_democracia <- sjPlot::plot_stackfrq(dplyr::select(investigacion,insatif_demo),
+                                title = "insatisfaccion con la democracia") +
+  theme(legend.position="bottom")
+insatisfaccion_democracia
+
+#Descriptivo de las variables
+summarytools::dfSummary(investigacion, plain.ascii = FALSE)
+view(dfSummary(investigacion, headings=FALSE))
+
+describe(investigacion)
+
+#Correlación de Pearson
+
+cor(investigacion, use="complete.obs")
+cor(investigacion[,c("insatif_demo","desconf_inst")], use="complete.obs")
+cor(investigacion[,c("insatif_demo","desconf_pjudicial")], use="complete.obs")
+cor(investigacion[,c("insatif_demo","desconf_gob")], use="complete.obs")
+cor(investigacion[,c("insatif_demo","desconf_ppolit")], use="complete.obs")
+cor(investigacion[,c("insatif_demo","desconf_cong")], use="complete.obs")
+tab_corr(investigacion, 
+         triangle = "lower")
+test <- cor.test(investigacion$insatif_demo, investigacion$desconf_inst, conf.level = 0.99)
+print(test)
+
+# valor p  < 0.00000000000000022, se rechaza hipotesis nula y se acepta que hay una correlacion
+#significativa entre las variables desconfianza institucional e insatisfaccion con la democracia
+
+# Modelo de regresion
+
+modelo<-lm(insatif_demo ~ desconf_inst, data = investigacion)
+grafico <- ggplot(investigacion, aes(x = desconf_inst, y = insatif_demo)) +
+  geom_point() + 
+  geom_smooth(method = "lm", se = FALSE, color = "green") + 
+  labs(title = "Gráfico de Regresión Lineal",
+       x = "desconfianza institucional",
+       y = "insatisfaccion con la democracia")
+print(grafico)
+summary(modelo)
+
+modelo2 <- lm(insatif_demo ~ desconf_inst * metropo, data = investigacion)
+summary(modelo2)
+tab_model(modelo2,show.se = TRUE, show.ci = FALSE)
+```
+
+## Insatisfaccion por la democracia: ¿Como influye la desconfianza en la instituciones politicas?
+
+Camilo Agurto
+
+## Introduccion
+
+Durante los ultimos años las distintas manifestaciones sociales han expresado un fuerte descontento con la clase politica del país. Así tambien, diversas encuestas que evaluan el descontento ciudadano han sido categoricas en que la evaluación a las instituciones politicas se encuentran en estado critico. Diversas son las razones que han contribuido a este malestar, entre ellos los casos de corrupción, trafico de influencias e incapacidad para dar respuesta a las problematicas sociales. Gamboa, R [@gamboaChile2015Falla2016] señala, por ejemplo, como el caso Caval en el segundo gobierno de Michelle Bachelet provocó que muchas de sus reformas, inclusos aquellas que en perspectiva se esperaba fueran populares, no contarán con la aprobación ni con el entusiasmo ciudadano.
+
+Desde una perspectiva sistémica Aravena, A [@aravenaConstruccionSocioimaginariaRelaciones2015] nos señala que el malestar con la clase política reside en una crisis de las democracias que no logran generar certezas ante una serie de incertidumbres que van experimentando las sociedades. Sobre esto último es importante destacar una serie de transformaciones profundas en la experiencia tanto objetiva como subjetiva de la realidad social que ha sido provocada por la integración de nuevas tecnologías y las redes sociales que ha generado una cibercultura que redefine los términos de la participación política de parte de la ciudadanía, y que entre sus consecuencias negativas se puede considerar la baja tolerancia a la divergencia, lo que se puede traducir en malestar político [@ayalap.2014]
+
+La crisis que experimenta el sistema político es tratada por lo general como una crisis de la representatividad de los partidos políticos. No obstante, la devaluación de la institucionalidad política pareciera ser un fenómeno relativamente transversal, desde los gobiernos, hasta el congreso e incluso el sistema de justicia, cuentan con altos niveles de desaprobación y desafección. Esto plantea un problema mucho más complejo en el horizonte de la estabilidad política futura del país - y  los países occidentales ya que se trata de un problema de alcance global - que es el peligro que experimentan los sistemas democráticos al posible advenimiento de regímenes autoritarios. Dentro de la discusión no son pocos los intelectuales y expertos que asumen de forma a priori que la crisis del sistema político, en particular la crisis de representatividad, genera una pérdida progresiva de los valores democráticos, por ejemplo izquierdo, S [@izquierdoAlarmanteFaltaConfianza2023] asume una relación lineal de la crisis de representatividad con una una pérdida del valor hacía el sistema democratico país. Sin embargo, ante la evidente naturalización de la relación entre estos fenómenos, es importante plantear una irrupción crítica que permita por medio de una investigación dar cuenta si es posible establecer una relación a priori entre estos fenómenos, o si por el contrario se hace conveniente matizar o resguardar conclusiones que se podrían estar utilizando de forma apresurada. 
+
+La investigación que se llevará a cabo buscará dar cuenta, tanto por medio de los datos empíricos como por medio de una revisión de la literatura, como la valoración social hacía la democracia se ve afectada por la desconfianza hacía las instituciones politicas. El objetivo de este estudio es observar si es posible establecer una correlación entre ambos fenómenos que sea significativa, además de indagar de manera más bien específica que valores democráticos son los que se ven más o menos afectados en relación al descontento político. El interés de indagar esta problemática se encuentra en la posibilidad de aportar conocimiento que pueda dar luces más claras sobre la situación política contingente y los riesgos que pudieran haber sobre las condiciones sociales que dieran posibilidad a regresiones autoritarias futuras en el país.
+
+**Pregunta de investigacion**
+
+¿De qué manera la desconfianza por las instituciones políticas afecta a la insatisfacción que sienten los chilenos por la democracia? 
+
+------------------------------------------------------------------------
+
+**Metodología**
+
+Para este estudio se utilizara la base de datos de la encuesta ELSOC 2016 -2022, el cual consiste en un estudio longitudinal que analiza los cambios en el electorado chileno entre los años señalados. Para proposito de nuestra investigación, usaremos aquellas variables que refieran en primer lugar a satisfaccion con el regimen democratico, y en segundo lugar aquellas que refieran a la desconfianza con la institucionalidad politica del país.
+
+Usaremos como variable dependiente la variable C01 que responde a la satisfaccion con la democracia en Chile. Esta variable plantea la pregunta ¿Cúan satisfecho o insatisfecho esta usted con el funcionamiento de la democracia en Chile? y sus alternativas de respuesta son 1. Nada satisfecho, 2. Poco satisfecho, 3. Algo satisfecho, 4. Bastante satisfecho, 5. Muy satisfecho.
+
+Las variables independientes que ocuparemos responden a la pregunta ¿Podría decirme cuanto confia usted en cada una de las siguientes instituciones? -\> gobierno (c05_01), partidos politicos (c05_02), poder judicial (c05_05) y congreso (c05_07). Estas cuatro variables comparten originalmente un orden de respuesta en donde 1 es nada de confianza y 5 mucha confianza.
+
+Debido a que buscamos utilizar el nivel de desconfianza que tienen los chilenos en las instituciones, se opto por revertir el valor de las variables independientes quedando como 0 nada de desconfianza y 4 mucha desconfianza. De igual manera, como la pregunta refiere a los niveles de insatisfaccion por la democracia en Chile, a la variable dependiente c01 se le revirtio sus valores
+
+Los valores asociados a las alternativas de respuesta -999 no responde, -888 no sabe, -777 valor perdido por error tecnico y -666 valor perdido por encuesta incompleta, fueron dejados como valores nulos. Consiguientemente se procede a borrar los valores nulos de la base de datos .
+
+Se crea una nueva variable independiente que es la suma total de las variables de desconfianza en instituciones politicas. Esta variable se llama "Desconfianza en instituciones politicas".
+
+Tambien se construira una variable dummy en base a la variable region_cod, esto para establecer una diferencia comparatoria entre los niveles de insatisfaccion con la democracia de acuerdo a la desconfianza en las instituciones politicas según sean los ciudadanos de la región metropolitana y los que no. La razón es que se presupone una diferencia en los niveles de insatisfacción y descontento respecto del regimen democrativo debido al caracter centralista de la mayoría de las politicas publicas en chile.
+
+## Resultados
+
+**Medidas de tendencia central de las variables a utilizar**
+
+*Variable dependiente:*
+
+insatisfaccion por la democracia: Media: 2.91, mediana:3, sd: 0.94
+
+De acuerdo a las medidas centrales de la variable insatisfacción por la democracia, podemos señalar que en promedio los chilenos se encuentran en una posición de insatisfacción moderada por la democracia, especificamente entre los rangos "algo insatisfecho" y "bastante insatisfecho".
+
+*Variables independientes:*
+
+Desconfianza gobierno: media: 3.07, mediana: 3, sd: 0.91
+
+Desconfianza partidos politicos: media: 3.59, mediana: 4, sd: 0.66
+
+Desconfianza poder judicial: media: 2.95, mediana: 3, sd: 0.96
+
+Desconfianza congreso: media: 3.21, mediana: 3, sd: 0.85
+
+Los datos nos indican que en casi todas las variables de desconfianza politica se presenta una media que va desde 3 a 4, salvo la variable de poder judicial que presenta 2.95. Esto nos indica que la desconfianza promedio que sienten los encuestados va desde algo de desconfianza a bastante desconfianza. Por otro lado, la variable partidos politicos es la que presenta un promedio mas alto de desconfianza respecto de las demas, y ademas es que la presenta menor dispersión en sus datos lo que nos indica que hay un sentir mas homogeneo por parte de los encuestados respecto de esta variable.
+
+```{r}
+describe(investigacion)
+```
+
+**Correlación entre variables**
+
+```{r}
+tab_corr(investigacion, 
+                 triangle = "lower")
+```
+
+La correlación de Pearson entre las variables seleccionadas presentan todas una dirección positiva, esto quiere decir que cuando una aumenta las otras tambien tienen a aumentar. Por otro lado la fuerza de la correlación entre todas se encuentra dentro del rango moderado que va de 0.3 a casi 0.5. La variables mas correlacionadas entre sí son insatisfacción con la democracia y la variable sumativa creada desconfianza en las instituciones con un 0.48. Por esto, se procedera a trabajar el modelo de regresión proximo con estas dos variables, donde la independiente sera desconfianza en las instituciones politicas y la dependiente insatisfaccion por la democracia
+
+**test de hipotesis a la correlación entre insatisfaccion por la democracia y desconfianza en las instituciones politicas**
+
+```{r}
+print(test)
+```
+
+Con un 99% de confianza se rechaza la hipotesis nula la cual establecia que no hay una relación significativa entre las variables y se acepta la hipotesis alternativas, por lo que las variables "insatisfacción por la democracia" y "desconfianza en las instituciones politicas" se encuentran significativamente correlacionadas.
+
+**Regresion lineal entre insatisfaccion por la democracia y desconfianza en las instituciones politicas**
+
+*Modelo 1*
+
+```{r}
+print(grafico)
+```
+
+```{r}
+summary(modelo)
+```
+
+De acuerdo al modelo de regresion que establece como variable dependiente a la insatisfaccion por la democracia y como variable independiente la desconfianza en las instituciones politicas, es posible señalar en primer lugar que el intercepto es de 0.63, esto significa que es el valor que toma la variable insatisfacción por la democracia cuando la variable desconfianza en las institucions politicas es 0. En segundo lugar, podemos señalar que a medida que aumenta en un punto el valor de desconfianza en las instituciones politicas, el grado de insatisfacción por la democracia aumenta 0.17 puntos. Sobre esto podemos señalar que es una recta de regresión positiva. Además, de acuerdo a la bondad de ajuste (R2) se puede decir que la desconfianza en las instituciones politicas explica aproximadamente un 23% de la varianza de la insatisfacción por la democracia.
+
+*Modelo 2: Comparativa entre ciudadanos de la región metropolitana con los ciudadanos de otras regiones*
+
+```{r}
+tab_model(modelo2,show.se = TRUE, show.ci = FALSE)
+```
+
+De acuerdo al coeficiente de regresion de nuestro modelo numero 2 que incorporo como factor la variable dummy metropo, la cual considera como presencia a los ciudadanos de la region metropolitana (1) y como ausencia a los ciudadanos de otras regiones (0), podemos señalar en primer lugar que el nivel de insatisfacción por la democracia es -0.29 puntos menor en los ciudadanos de otras regiones respecto de los que viven en la region metropolitana, esto cuando el nivel de desconfianza en las instituciones politicas es 0. En segundo lugar, es posible establecer que a medida que la desconfianza en las instituciones politicas aumentan en un punto, los ciudadanos de la región metropolitana presentan 0.02 puntos mas de insatisfacción por la democracia respecto de los personas que viven en otras regiones. En conclusión, de acuerdo a este modelo, los ciudadanos de la región metropolitana sienten una mayor insatisfacción por la democracia respecto de los ciudadanos de otras regiones, esto a medida que aumenta la desconfianza en las instituciones politicas.
