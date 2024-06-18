@@ -1,0 +1,213 @@
+"0","#recodificacion variables: pasamos de satisfaccion a insatisfaccion, tambien de "
+"0","# de confianza a desconfianza, para ello revertimos los valores de todas las variables"
+"0",""
+"0","investigacion$c01 <- recode(investigacion$c01, ""1=4;2=3;3=2;4=1;5=0"")"
+"0","investigacion$c05_01 <- recode(investigacion$c05_01,""1=4;2=3;3=2;4=1;5=0"")"
+"0","investigacion$c05_02 <- recode(investigacion$c05_02,""1=4;2=3;3=2;4=1;5=0"")"
+"0","investigacion$c05_05 <- recode(investigacion$c05_05,""1=4;2=3;3=2;4=1;5=0"")"
+"0","investigacion$c05_07 <- recode(investigacion$c05_07,""1=4;2=3;3=2;4=1;5=0"")"
+"0",""
+"0",""
+"0",""
+"0","#recodificacion a variable dummy region: region metropolitana 1, otras regiones 0 (variable metropo)"
+"0",""
+"0","investigacion <- investigacion %>%"
+"0","  mutate(metropo = case_when("
+"0","    region_cod %in% c(13) ~ 1,"
+"0","    TRUE ~ 0"
+"0","  ))"
+"0",""
+"0","#Renombrar variables"
+"0",""
+"0","investigacion <- investigacion %>% rename(""insatif_demo""=c01,"
+"0","                                          ""desconf_gob""=c05_01,"
+"0","                                          ""desconf_ppolit""=c05_02,"
+"0","                                          ""desconf_pjudicial""=c05_05,"
+"0","                                          ""desconf_cong""=c05_07,"
+"0","                                          ""region""=region_cod)"
+"0","investigacion$insatif_demo <- set_label(x=investigacion$insatif_demo,label = ""insatisfaccion:democracia"")"
+"0","get_label(investigacion$insatif_demo)"
+"1","[1]"
+"1"," ""insatisfaccion:democracia"""
+"1","
+"
+"0","investigacion$desconf_gob <- set_label(x=investigacion$desconf_gob,label = ""desconfianza:Gobierno"")"
+"0","get_label(investigacion$desconf_gob)"
+"1","[1]"
+"1"," ""desconfianza:Gobierno"""
+"1","
+"
+"0","investigacion$desconf_ppolit <- set_label(x=investigacion$desconf_ppolit,label = ""desconfianza:partidospoliticos"")"
+"0","get_label(investigacion$desconf_ppolit)"
+"1","[1]"
+"1"," ""desconfianza:partidospoliticos"""
+"1","
+"
+"0","investigacion$desconf_pjudicial <- set_label(x=investigacion$desconf_pjudicial,label = ""desconfianza:poderjudicial"")"
+"0","get_label(investigacion$desconf_pjudicial)"
+"1","[1]"
+"1"," ""desconfianza:poderjudicial"""
+"1","
+"
+"0","investigacion$desconf_cong <- set_label(x=investigacion$desconf_cong,label = ""desconfianza:Congreso"")"
+"0","get_label(investigacion$desconf_cong)"
+"1","[1]"
+"1"," ""desconfianza:Congreso"""
+"1","
+"
+"0","#arreglo de recodificacion"
+"0",""
+"0","investigacion$insatif_demo <- set_labels(investigacion$insatif_demo,"
+"0","                                 labels=c( ""nada insatisfecho""=0,"
+"0","                                           ""poco insatisfecho""=1,"
+"0","                                           ""algo insatisfecho""=2,"
+"0","                                           ""bastante insatisfecho""=3,"
+"0","                                           ""muy insatisfecho""=4))"
+"0","investigacion$desconf_gob <- set_labels(investigacion$desconf_gob,"
+"0","                                 labels=c( ""nada de desconfianza""=0,"
+"0","                                           ""poca desconfianza""=1,"
+"0","                                           ""Algo de deconfianza""=2,"
+"0","                                           ""bastante desconfianza""=3,"
+"0","                                           ""mucha desconfianza""=4))"
+"0","investigacion$desconf_ppolit <- set_labels(investigacion$desconf_ppolit,"
+"0","                                     labels=c( ""nada de desconfianza""=0,"
+"0","                                               ""poca desconfianza""=1,"
+"0","                                               ""Algo de deconfianza""=2,"
+"0","                                               ""bastante desconfianza""=3,"
+"0","                                               ""mucha desconfianza""=4))"
+"0",""
+"0","investigacion$desconf_pjudicial<- set_labels(investigacion$desconf_pjudicial,"
+"0","                                        labels=c( ""nada de desconfianza""=0,"
+"0","                                                  ""poca desconfianza""=1,"
+"0","                                                  ""Algo de deconfianza""=2,"
+"0","                                                  ""bastante desconfianza""=3,"
+"0","                                                  ""mucha desconfianza""=4))"
+"0",""
+"0",""
+"0","investigacion$desconf_cong <- set_labels(investigacion$desconf_cong,"
+"0","                                     labels=c( ""nada de desconfianza""=0,"
+"0","                                               ""poca desconfianza""=1,"
+"0","                                               ""Algo de deconfianza""=2,"
+"0","                                               ""bastante desconfianza""=3,"
+"0","                                               ""mucha desconfianza""=4))"
+"0",""
+"0",""
+"0","#Creamos variable de confianza institucional"
+"0","investigacion$desconf_inst <- (investigacion$desconf_gob+investigacion$desconf_ppolit+investigacion$desconf_pjudicial+investigacion$desconf_cong)"
+"0","summary(investigacion$desconf_inst)"
+"1","   Min. "
+"1","1st Qu. "
+"1"," Median "
+"1","   Mean "
+"1","3rd Qu. "
+"1","   Max. "
+"1","
+"
+"1","    2.0 "
+"1","   11.0 "
+"1","   13.0 "
+"1","   12.8 "
+"1","   15.0 "
+"1","   16.0 "
+"1","
+"
+"0","frq(investigacion$desconf_inst)"
+"1","[31mx[39m[34m <numeric>[39m 
+[34m# total N=1539 valid N=1539 mean=12.80 sd=2.59[39m
+
+Value |   N | Raw % | Valid % | Cum. %
+--------------------------------------
+    2 |   2 |  0.13 |    0.13 |   0.13
+    3 |   2 |  0.13 |    0.13 |   0.26
+    4 |   2 |  0.13 |    0.13 |   0.39
+    5 |   5 |  0.32 |    0.32 |   0.71
+    6 |  11 |  0.71 |    0.71 |   1.43
+    7 |  24 |  1.56 |    1.56 |   2.99
+    8 |  70 |  4.55 |    4.55 |   7.54
+    9 |  64 |  4.16 |    4.16 |  11.70
+   10 | 121 |  7.86 |    7.86 |  19.56
+   11 | 112 |  7.28 |    7.28 |  26.84
+   12 | 241 | 15.66 |   15.66 |  42.50
+   13 | 177 | 11.50 |   11.50 |  54.00
+   14 | 248 | 16.11 |   16.11 |  70.11
+   15 | 180 | 11.70 |   11.70 |  81.81
+   16 | 280 | 18.19 |   18.19 | 100.00
+ <NA> |   0 |  0.00 |    <NA> |   <NA>
+"
+"0","investigacion$desconf_inst <- set_label(x=investigacion$desconf_inst,label = ""desconfianza en instituciones"")"
+"0",""
+"0",""
+"0","#revision"
+"0",""
+"0","frq(investigacion$insatif_demo)"
+"1","[31minsatisfaccion:democracia (x)[39m[34m <numeric>[39m 
+[34m# total N=1539 valid N=1539 mean=2.90 sd=0.94[39m
+
+Value |                 Label |   N | Raw % | Valid % | Cum. %
+--------------------------------------------------------------
+    0 |     nada insatisfecho |  18 |  1.17 |    1.17 |   1.17
+    1 |     poco insatisfecho |  93 |  6.04 |    6.04 |   7.21
+    2 |     algo insatisfecho | 387 | 25.15 |   25.15 |  32.36
+    3 | bastante insatisfecho | 575 | 37.36 |   37.36 |  69.72
+    4 |      muy insatisfecho | 466 | 30.28 |   30.28 | 100.00
+ <NA> |                  <NA> |   0 |  0.00 |    <NA> |   <NA>
+"
+"0","frq(investigacion$desconf_gob)"
+"1","[31mdesconfianza:Gobierno (x)[39m[34m <numeric>[39m 
+[34m# total N=1539 valid N=1539 mean=3.10 sd=0.87[39m
+
+Value |                 Label |   N | Raw % | Valid % | Cum. %
+--------------------------------------------------------------
+    0 |  nada de desconfianza |   6 |  0.39 |    0.39 |   0.39
+    1 |     poca desconfianza |  58 |  3.77 |    3.77 |   4.16
+    2 |   Algo de deconfianza | 311 | 20.21 |   20.21 |  24.37
+    3 | bastante desconfianza | 569 | 36.97 |   36.97 |  61.34
+    4 |    mucha desconfianza | 595 | 38.66 |   38.66 | 100.00
+ <NA> |                  <NA> |   0 |  0.00 |    <NA> |   <NA>
+"
+"0","frq(investigacion$desconf_ppolit)"
+"1","[31mdesconfianza:partidospoliticos (x)[39m[34m <numeric>[39m 
+[34m# total N=1539 valid N=1539 mean=3.59 sd=0.66[39m
+
+Value |                 Label |    N | Raw % | Valid % | Cum. %
+---------------------------------------------------------------
+    0 |  nada de desconfianza |    1 |  0.06 |    0.06 |   0.06
+    1 |     poca desconfianza |    9 |  0.58 |    0.58 |   0.65
+    2 |   Algo de deconfianza |  119 |  7.73 |    7.73 |   8.38
+    3 | bastante desconfianza |  364 | 23.65 |   23.65 |  32.03
+    4 |    mucha desconfianza | 1046 | 67.97 |   67.97 | 100.00
+ <NA> |                  <NA> |    0 |  0.00 |    <NA> |   <NA>
+"
+"0","frq(investigacion$desconf_pjudicial)"
+"1","[31mdesconfianza:poderjudicial (x)[39m[34m <numeric>[39m 
+[34m# total N=1539 valid N=1539 mean=2.91 sd=0.95[39m
+
+Value |                 Label |   N | Raw % | Valid % | Cum. %
+--------------------------------------------------------------
+    0 |  nada de desconfianza |  16 |  1.04 |    1.04 |   1.04
+    1 |     poca desconfianza |  96 |  6.24 |    6.24 |   7.28
+    2 |   Algo de deconfianza | 386 | 25.08 |   25.08 |  32.36
+    3 | bastante desconfianza | 551 | 35.80 |   35.80 |  68.16
+    4 |    mucha desconfianza | 490 | 31.84 |   31.84 | 100.00
+ <NA> |                  <NA> |   0 |  0.00 |    <NA> |   <NA>
+"
+"0","frq(investigacion$desconf_cong)"
+"1","[31mdesconfianza:Congreso (x)[39m[34m <numeric>[39m 
+[34m# total N=1539 valid N=1539 mean=3.20 sd=0.85[39m
+
+Value |                 Label |   N | Raw % | Valid % | Cum. %
+--------------------------------------------------------------
+    0 |  nada de desconfianza |   7 |  0.45 |    0.45 |   0.45
+    1 |     poca desconfianza |  30 |  1.95 |    1.95 |   2.40
+    2 |   Algo de deconfianza | 302 | 19.62 |   19.62 |  22.03
+    3 | bastante desconfianza | 505 | 32.81 |   32.81 |  54.84
+    4 |    mucha desconfianza | 695 | 45.16 |   45.16 | 100.00
+ <NA> |                  <NA> |   0 |  0.00 |    <NA> |   <NA>
+"
+"0","#grafico desconfianza en instituciones"
+"0",""
+"0","investigacion %>% ggplot(aes(x = desconf_inst)) + "
+"0","  geom_bar(fill = ""black"")+"
+"0","  labs(title = ""Desconfianza en instituciones"","
+"0","       x = ""Desconfianza en instituciones"","
+"0","       y = ""Frecuencia"")"

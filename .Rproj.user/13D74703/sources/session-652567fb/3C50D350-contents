@@ -17,8 +17,6 @@ options(scipen=999)
 rm(list=ls())
 
 
-#Establecer directorio de trabajo
-setwd("C:/Users/Camilo Agurto/OneDrive/Documentos/GitHub/Rdata1/Trabajo2")
 
 #cargar paquetes
 library(summarytools)

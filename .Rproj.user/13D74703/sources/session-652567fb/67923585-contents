@@ -7,9 +7,6 @@ options(scipen=999)
 rm(list=ls())
 
 
-#Establecer directorio de trabajo
-setwd("C:/Users/Camilo Agurto/OneDrive/Documentos/GitHub/Rdata1/Trabajo2")
-
 #cargar paquetes
 library(summarytools)
 library(sjlabelled)
@@ -295,4 +292,10 @@ grafico3 <- ggplot(investigacion, aes(x = m13 , y = insatif_demo)) +
        x = "ingreso mensual",
        y = "insatisfaccion con la democracia")
 print(grafico3)
+
+# Modelo regresion lineal multiple
+
+modelo3 <- lm(insatif_demo ~ desconf_inst+quintil_ingresos+m0_sexo+educacion+tramos_edad, data = investigacion)
+tab_model(modelo3,show.se = TRUE, show.ci = FALSE)
+summary(modelo3)
 
