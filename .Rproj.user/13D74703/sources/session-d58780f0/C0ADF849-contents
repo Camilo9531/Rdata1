@@ -1,0 +1,117 @@
+---
+title: "Insatisfaccion con la democracia"
+author: "Camilo Agurto"
+format: 
+       revealjs: 
+              theme: moon
+editor: visual
+---
+
+# Introducción
+
+Insatisfaccion por la democracia: ¿Como influye la desconfianza en la instituciones politicas?
+
+-   Aumento de la desconfianza en las instituciones
+-   Partidos politicos y congreso los mas devaluados
+-   Crisis de la democracia
+-   Uso de la base de datos ELSOC
+
+## Descriptivos
+
+::: columns
+::: {.column width="40%"}
+La variable principal es Insatisfaccion con la democracia
+:::
+
+::: {.column width="60%"}
+Se ve afectada por variables de desconfianza institucional
+
+-   Partidos politicos
+-   Congreso
+-   Poder judicial
+-   Gobierno
+-   Sumatoria: Desconfianza Institucional
+:::
+:::
+
+## *Descriptivos 2*
+
+insatisfaccion por la democracia: Media: 2.91, mediana:3, sd: 0.94
+
+Desconfianza gobierno: media: 3.07, mediana: 3, sd: 0.91
+
+Desconfianza partidos politicos: media: 3.59, mediana: 4, sd: 0.66
+
+Desconfianza poder judicial: media: 2.95, mediana: 3, sd: 0.96
+
+Desconfianza congreso: media: 3.21, mediana: 3, sd: 0.85
+
+## Correlaciones
+
+![](correlaciones.PNG)
+
+## Test de hipotesis
+
+Test de hipotesis para correlación de Pearson entre insatisfaccion con la democracia y desconfianza institucional
+
+valor-p = 0.00000000000000022 Se rechaza hipotesis nula y se acepta que las variables tienen una correlación estadisticamente significativa
+
+## Grafico 1:
+
+![](images/insatifdemo.png)
+
+## Grafico 2:
+
+![](images/desconfianza.jpeg)
+
+## Modelo 1:
+
+Modelo de regresión simple 1: Variable dependiente Insatisfaccion con la democracia, variable independiente desconfianza institucional.
+
+Intercepto: 0.50 Coef.Regresion: 0.19 R2: 0.26
+
+## Grafico regresion lineal 1
+
+![](images/RL1.png){fig-align="center" width="800"}
+
+## Modelo 2: Metropo - insatisfacción D.
+
+![](images/Captura.PNG)
+
+Analisis...
+
+## Tabla cruzada 1
+
+![](images/TC%20educacion.PNG)
+
+## Tabla cruzada 2
+
+![](images/TC%20edad.PNG)
+
+## Tabla Cruzada 3
+
+![](images/TC%20quintil.PNG){width="551"}
+
+![](images/plot%201.png){width="559"}
+
+## Tabla cruzada 4
+
+![](images/TC%20sexo.PNG)
+
+## Conclusiones
+
+::: columns
+::: {.column width="50%"}
+-   La variable de insatisfaccion con la democracia presenta una correlación positiva moderada respecto de las variables de desconfianza en las intituciones politicas.
+:::
+
+::: {.column width="50%"}
+-   Es posible observar que la insatisfacción por la democracia aumenta respecto del rango etario y del rango de ingresos mensuales. En el nivel educacional la insatisfacción es mayor en personas con menos estudios formales completados. En cuanto al sexo no se observan diferencias.
+:::
+:::
+
+## Conclusiones 2
+
+-   El modelo de regresión lineal simple entre la variable insatisfaccion por la democracia y desconfianza en las instituciones explica solo un 26% de la variabilidad de la variable dependiente.
+
+-   Por otra parte, las personas que viven en una region diferente de la metropolitana presentan un mayor nivel de insatisfaccion con la democracia respecto aumenta su desconfianza con las instituciones.

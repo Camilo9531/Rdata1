@@ -23,6 +23,7 @@ library(ggplot2)
 library(psych)
 library(stargazer)
 library(car)
+library(psych)
 #Cargar base de datos 
 ELSOC <- read_dta("C:/Users/Camilo Agurto/OneDrive/Documentos/GitHub/Rdata1/Trabajo2/input/ELSOC_W05_v1.0_Stata13.dta")
 
@@ -46,7 +47,7 @@ view(ELSOC)
 
 #Seleccion de variables a utilizar
 
-investigacion <- select(ELSOC,region_cod,c01,c05_01,c05_02,c05_05,c05_07)
+investigacion <- select(ELSOC,region_cod,c01,c05_01,c05_02,c05_05,c05_07,m0_sexo, m0_edad, m01,m13)
 
 #Valores descriptivos
 
@@ -61,11 +62,18 @@ frq(investigacion$c05_05)
 investigacion$c05_05 <- recode(investigacion$c05_05,"c(-999,-888,-777,-666)=NA")
 frq(investigacion$c05_07)
 investigacion$c05_07 <- recode(investigacion$c05_07,"c(-999,-888,-777,-666)=NA")
+frq(investigacion$m0_sexo)
+frq(investigacion$m0_edad)
+frq(investigacion$m01)
+frq(investigacion$m13)
+investigacion$m01 <- recode(investigacion$m01,"c(-999,-888,-777,-666)=NA")
+investigacion$m13 <- recode(investigacion$m13, "c(-999,-888,-777,-666)=NA")
 
 #Borrar datos nulos
 
 investigacion <-na.omit(investigacion)
 describe(investigacion)
+
 #recodificacion variables: pasamos de satisfaccion a insatisfaccion, tambien de 
 # de confianza a desconfianza, para ello revertimos los valores de todas las variables
 
@@ -74,6 +82,22 @@ investigacion$c05_01 <- recode(investigacion$c05_01,"1=4;2=3;3=2;4=1;5=0")
 investigacion$c05_02 <- recode(investigacion$c05_02,"1=4;2=3;3=2;4=1;5=0")
 investigacion$c05_05 <- recode(investigacion$c05_05,"1=4;2=3;3=2;4=1;5=0")
 investigacion$c05_07 <- recode(investigacion$c05_07,"1=4;2=3;3=2;4=1;5=0")
+
+investigacion$educacion <- cut(investigacion$m01,
+                            breaks = c(1, 3, 5, 10),
+                            labels = c("Basica", "Media", "Superior"),
+                            include.lowest = TRUE)
+
+
+investigacion <- investigacion[order(investigacion$m13), ]
+quintiles <- quantile(investigacion$m13, probs = seq(0, 1, length.out = 6))
+investigacion$quintil_ingresos <- cut(investigacion$m13,
+                              breaks = quintiles,
+                              labels = c("Quintil 1", "Quintil 2", "Quintil 3", "Quintil 4", "Quintil 5"),
+                              include.lowest = TRUE)
+frq(investigacion$quintil_ingresos)
+describe(investigacion$m13)
+summary(investigacion$quintil_ingresos)
 
 #recodificacion a variable dummy region: region metropolitana 1, otras regiones 0 (variable metropo)
 
@@ -90,7 +114,11 @@ investigacion <- investigacion %>% rename("insatif_demo"=c01,
                                           "desconf_ppolit"=c05_02,
                                           "desconf_pjudicial"=c05_05,
                                           "desconf_cong"=c05_07,
-                                          "region"=region_cod)
+                                          "region"=region_cod,
+                                          "sexo" =m0_sexo,
+                                          "educacion"=m01,
+                                          "edad"=m0_edad,
+                                          "ingreso"=m13)
 investigacion$insatif_demo <- set_label(x=investigacion$insatif_demo,label = "insatisfaccion:democracia")
 get_label(investigacion$insatif_demo)
 investigacion$desconf_gob <- set_label(x=investigacion$desconf_gob,label = "desconfianza:Gobierno")
@@ -138,7 +166,9 @@ investigacion$desconf_cong <- set_labels(investigacion$desconf_cong,
                                                "Algo de deconfianza"=2,
                                                "bastante desconfianza"=3,
                                                "mucha desconfianza"=4))
-
+investigacion$sexo <- set_labels(investigacion$sexo,
+                                 labels = c("Hombre"=1,
+                                            "Mujer"=2))
 
 #Creamos variable de confianza institucional
 investigacion$desconf_inst <- (investigacion$desconf_gob+investigacion$desconf_ppolit+investigacion$desconf_pjudicial+investigacion$desconf_cong)
@@ -195,6 +225,8 @@ cor(investigacion[,c("insatif_demo","desconf_ppolit")], use="complete.obs")
 cor(investigacion[,c("insatif_demo","desconf_cong")], use="complete.obs")
 tab_corr(investigacion, 
          triangle = "lower")
+cor(investigacion[,c("insatif_demo","ingreso")], use="complete.obs")
+
 test <- cor.test(investigacion$insatif_demo, investigacion$desconf_inst, conf.level = 0.99)
 print(test)
 
@@ -216,5 +248,7 @@ summary(modelo)
 modelo2 <- lm(insatif_demo ~ desconf_inst * metropo, data = investigacion)
 summary(modelo2)
 tab_model(modelo2,show.se = TRUE, show.ci = FALSE)
+
+tapply(investigacion$insatif_demo, investigacion$sexo, mean)
 
 

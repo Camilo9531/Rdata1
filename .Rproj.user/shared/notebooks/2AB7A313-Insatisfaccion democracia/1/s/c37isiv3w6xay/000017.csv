@@ -1,0 +1,85 @@
+"0",""
+"0","#Descriptivo de las variables"
+"0","summarytools::dfSummary(investigacion, plain.ascii = FALSE)"
+"1","### Data Frame Summary  
+#### investigacion  
+**Dimensions:** 1539 x 12  
+**Duplicates:** 0  
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+No   Variable                               Label                                  Stats / Values                     Freqs (% of Valid)    Graph                                  Valid      Missing  
+---- -------------------------------------- -------------------------------------- ---------------------------------- --------------------- -------------------------------------- ---------- ---------
+1    region\                                Region (Codigo)                        Mean (sd) : 8.5 (3.8)\             15 distinct values    \ \ \ \ \ \ \ \ \ \ \ \ \ \ :\         1539\      0\       
+     [haven_labelled, vctrs_vctr, double]                                          min < med < max:\                                        \ \ \ \ \ \ \ \ \ \ \ \ \ \ :\         (100.0%)   (0.0%)   
+                                                                                   1 < 8 < 16\                                              \ \ \ \ : \ \ . \ \ \ \ :\                                 
+                                                                                   IQR (CV) : 8 (0.5)                                       \ \ : : : : : \ \ :\                                       
+                                                                                                                                            . : : : : : \ \ : . .                                      
+
+2    insatif_demo\                          insatisfaccion:democracia              Mean (sd) : 2.9 (0.9)\             0 :  18 ( 1.2%)\      \                                      1539\      0\       
+     [haven_labelled, vctrs_vctr, double]                                          min < med < max:\                  1 :  93 ( 6.0%)\      I \                                    (100.0%)   (0.0%)   
+                                                                                   0 < 3 < 4\                         2 : 387 (25.1%)\      IIIII \                                                    
+                                                                                   IQR (CV) : 2 (0.3)                 3 : 575 (37.4%)\      IIIIIII \                                                  
+                                                                                                                      4 : 466 (30.3%)       IIIIII                                                     
+
+3    desconf_gob\                           desconfianza:Gobierno                  Mean (sd) : 3.1 (0.9)\             0 :   6 ( 0.4%)\      \                                      1539\      0\       
+     [haven_labelled, vctrs_vctr, double]                                          min < med < max:\                  1 :  58 ( 3.8%)\      \                                      (100.0%)   (0.0%)   
+                                                                                   0 < 3 < 4\                         2 : 311 (20.2%)\      IIII \                                                     
+                                                                                   IQR (CV) : 1 (0.3)                 3 : 569 (37.0%)\      IIIIIII \                                                  
+                                                                                                                      4 : 595 (38.7%)       IIIIIII                                                    
+
+4    desconf_ppolit\                        desconfianza:partidospoliticos         Mean (sd) : 3.6 (0.7)\             0 :    1 ( 0.1%)\     \                                      1539\      0\       
+     [haven_labelled, vctrs_vctr, double]                                          min < med < max:\                  1 :    9 ( 0.6%)\     \                                      (100.0%)   (0.0%)   
+                                                                                   0 < 4 < 4\                         2 :  119 ( 7.7%)\     I \                                                        
+                                                                                   IQR (CV) : 1 (0.2)                 3 :  364 (23.7%)\     IIII \                                                     
+                                                                                                                      4 : 1046 (68.0%)      IIIIIIIIIIIII                                              
+
+5    desconf_pjudicial\                     desconfianza:poderjudicial             Mean (sd) : 2.9 (1)\               0 :  16 ( 1.0%)\      \                                      1539\      0\       
+     [haven_labelled, vctrs_vctr, double]                                          min < med < max:\                  1 :  96 ( 6.2%)\      I \                                    (100.0%)   (0.0%)   
+                                                                                   0 < 3 < 4\                         2 : 386 (25.1%)\      IIIII \                                                    
+                                                                                   IQR (CV) : 2 (0.3)                 3 : 551 (35.8%)\      IIIIIII \                                                  
+                                                                                                                      4 : 490 (31.8%)       IIIIII                                                     
+
+6    desconf_cong\                          desconfianza:Congreso                  Mean (sd) : 3.2 (0.9)\             0 :   7 ( 0.5%)\      \                                      1539\      0\       
+     [haven_labelled, vctrs_vctr, double]                                          min < med < max:\                  1 :  30 ( 1.9%)\      \                                      (100.0%)   (0.0%)   
+                                                                                   0 < 3 < 4\                         2 : 302 (19.6%)\      III \                                                      
+                                                                                   IQR (CV) : 1 (0.3)                 3 : 505 (32.8%)\      IIIIII \                                                   
+                                                                                                                      4 : 695 (45.2%)       IIIIIIIII                                                  
+
+7    m0_sexo\                               Sexo del entrevistado                  Min  : 1\                          1 : 718 (46.7%)\      IIIIIIIII \                            1539\      0\       
+     [haven_labelled, vctrs_vctr, double]                                          Mean : 1.5\                        2 : 821 (53.3%)       IIIIIIIIII                             (100.0%)   (0.0%)   
+                                                                                   Max  : 2                                                                                                            
+
+8    m0_edad\                               Edad del entrevistado                  Mean (sd) : 45 (12.8)\             61 distinct values    \ \ \ \ : . . . .\                     1539\      0\       
+     [numeric]                                                                     min < med < max:\                                        \ \ : : : : : :\                       (100.0%)   (0.0%)   
+                                                                                   20 < 45 < 80\                                            . : : : : : :\                                             
+                                                                                   IQR (CV) : 20 (0.3)                                      : : : : : : : :\                                           
+                                                                                                                                            : : : : : : : : . .                                        
+
+9    m01\                                   Nivel educacional                      Mean (sd) : 5.9 (2.2)\             1 :   6 ( 0.4%)\      \                                      1539\      0\       
+     [haven_labelled, vctrs_vctr, double]                                          min < med < max:\                  2 :  84 ( 5.5%)\      I \                                    (100.0%)   (0.0%)   
+                                                                                   1 < 5 < 10\                        3 : 114 ( 7.4%)\      I \                                                        
+                                                                                   IQR (CV) : 3 (0.4)                 4 : 164 (10.7%)\      II \                                                       
+                                                                                                                      5 : 486 (31.6%)\      IIIIII \                                                   
+                                                                                                                      6 :  57 ( 3.7%)\      \                                                          
+                                                                                                                      7 : 238 (15.5%)\      III \                                                      
+                                                                                                                      8 : 104 ( 6.8%)\      I \                                                        
+                                                                                                                      9 : 250 (16.2%)\      III \                                                      
+                                                                                                                      10 :  36 ( 2.3%)                                                                 
+
+10   m13\                                   Ingreso mensual entrevistado (monto)   Mean (sd) : 610892.7 (617042.9)\   198 distinct values   :\                                     1539\      0\       
+     [numeric]                                                                     min < med < max:\                                        :\                                     (100.0%)   (0.0%)   
+                                                                                   10000 < 450000 < 9000000\                                :\                                                         
+                                                                                   IQR (CV) : 400000 (1)                                    :\                                                         
+                                                                                                                                            : .                                                        
+
+11   metropo\                                                                      Min  : 0\                          0 : 1105 (71.8%)\     IIIIIIIIIIIIII \                       1539\      0\       
+     [numeric]                                                                     Mean : 0.3\                        1 :  434 (28.2%)      IIIII                                  (100.0%)   (0.0%)   
+                                                                                   Max  : 1                                                                                                            
+
+12   desconf_inst\                          desconfianza en instituciones          Mean (sd) : 12.8 (2.6)\            15 distinct values    \ \ \ \ \ \ \ \ \ \ \ \ \ \ . \ \ :\   1539\      0\       
+     [numeric]                                                                     min < med < max:\                                        \ \ \ \ \ \ \ \ \ \ \ \ \ \ : \ \ :\   (100.0%)   (0.0%)   
+                                                                                   2 < 13 < 16\                                             \ \ \ \ \ \ \ \ \ \ \ \ \ \ : . :\                         
+                                                                                   IQR (CV) : 4 (0.2)                                       \ \ \ \ \ \ \ \ . . \ \ : : :\                             
+                                                                                                                                            \ \ \ \ \ \ . : : : : : :                                  
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+"

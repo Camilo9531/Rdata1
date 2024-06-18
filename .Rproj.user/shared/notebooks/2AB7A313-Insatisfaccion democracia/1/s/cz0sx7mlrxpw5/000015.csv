@@ -1,0 +1,7 @@
+"0",""
+"0","#grafico satisfaccion con la democracia"
+"0",""
+"0","insatisfaccion_democracia <- sjPlot::plot_stackfrq(dplyr::select(investigacion,insatif_demo),"
+"0","                                title = ""insatisfaccion con la democracia"") +"
+"0","  theme(legend.position=""bottom"")"
+"0","insatisfaccion_democracia"
